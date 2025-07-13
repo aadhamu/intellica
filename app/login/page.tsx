@@ -148,15 +148,14 @@ export default function AuthForm() {
         >
           <div className="w-100 d-flex justify-content-center align-items-center p-3 p-md-5"
           style={{backgroundColor: 'black'}}>
-            <Image
-              src="/image/login.png"
-              alt="Auth illustration"
-              width={400}
-              height={400}
-              className="img-fluid"
-              style={{ objectFit: 'contain', maxHeight: '400px' }}
-              priority
-            />
+           <img
+  src="/image/login.png"
+  alt="Auth illustration"
+  width="400"
+  height="400"
+  style={{ objectFit: 'contain', maxHeight: '400px' }}
+/>
+
           </div>
         </motion.div>
 
