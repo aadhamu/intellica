@@ -5,14 +5,12 @@ const domain = frontendUrl ? new URL(frontendUrl).hostname : "localhost";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: [domain],
+    domains: [domain], // Only needed if loading remote images
   },
   eslint: {
-    // ✅ Ignore ESLint build errors
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // ✅ Ignore TypeScript type errors
     ignoreBuildErrors: true,
   },
 };
