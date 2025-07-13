@@ -4,9 +4,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'intellica-g0ud.onrender.com',
-        pathname: '/image/**',
+        protocol: "https",
+        hostname: "intellica-g0ud.onrender.com",
+        pathname: "/image/**",
       },
     ],
   },

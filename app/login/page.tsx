@@ -151,14 +151,13 @@ export default function AuthForm() {
   style={{ backgroundColor: 'black' }}
 >
   <Image
-    src="/image/login.png"
-    alt="Auth illustration"
-    width={400}
-    height={400}
-    style={{ objectFit: 'contain', maxHeight: '400px' }}
-    className="img-fluid"
-    priority
-  />
+  src="https://intellica-g0ud.onrender.com/image/login.png"
+  alt="Auth illustration"
+  width={400}
+  height={400}
+  style={{ objectFit: 'contain' }}
+  priority
+/>
 </div>
 
         </motion.div>
