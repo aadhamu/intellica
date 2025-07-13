@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
-import Image from 'next/image';
+import Image from "next/image";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import LoadingSpinner from '../../component/loader';
@@ -146,18 +146,21 @@ export default function AuthForm() {
           animate={{ x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="w-100 d-flex justify-content-center align-items-center p-3 p-md-5"
-          style={{backgroundColor: 'black'}}>
-            <img
-  src="/image/login.png"
-  alt="Auth illustration"
-  width="400"
-  height="400"
-  style={{ objectFit: 'contain', maxHeight: '400px' }}
-  className="img-fluid"
-/>
+          <div
+  className="w-100 d-flex justify-content-center align-items-center p-3 p-md-5"
+  style={{ backgroundColor: 'black' }}
+>
+  <Image
+    src="/image/login.png"
+    alt="Auth illustration"
+    width={400}
+    height={400}
+    style={{ objectFit: 'contain', maxHeight: '400px' }}
+    className="img-fluid"
+    priority
+  />
+</div>
 
-          </div>
         </motion.div>
 
         {/* Form Column */}
