@@ -10,7 +10,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   const isAuthPage = pathname.includes('/login') || pathname.includes('/register');
 
   return (
-    <div className={`main-content ${isAuthPage ? '' : 'pt-5 mt-5'}`}>
+    <div className={`main-content ${isAuthPage ? '' : 'pt-5 mb-5'}`}>
       {children}
     </div>
   );
