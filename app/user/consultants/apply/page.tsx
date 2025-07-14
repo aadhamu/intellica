@@ -245,9 +245,10 @@ export default function ConsultantApplication() {
                             />
                           </label>
                           <span className="ms-2 text-muted">or drag and drop
-                            <br /> dont have a cv <Link href="http://resumeapex.pages.dev">create one</Link>
+                             
                           </span>
                         </div>
+                        <div> don't have a cv <Link href="http://resumeapex.pages.dev">create one</Link></div>
                         <small className="text-muted">PDF, DOC, DOCX up to 2MB</small>
                       </div>
                     </div>
