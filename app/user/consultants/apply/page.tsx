@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import Link from 'next/link';
 
 export default function ConsultantApplication() {
   const [isMounted, setIsMounted] = useState(false);
@@ -243,7 +244,9 @@ export default function ConsultantApplication() {
                               className="d-none"
                             />
                           </label>
-                          <span className="ms-2 text-muted">or drag and drop</span>
+                          <span className="ms-2 text-muted">or drag and drop
+                            <br /> dont have a cv <Link href="http://resumeapex.pages.dev">create one</Link>
+                          </span>
                         </div>
                         <small className="text-muted">PDF, DOC, DOCX up to 2MB</small>
                       </div>
