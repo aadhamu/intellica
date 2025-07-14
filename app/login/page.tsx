@@ -150,14 +150,14 @@ export default function AuthForm() {
   className="w-100 d-flex justify-content-center align-items-center p-3 p-md-5"
   style={{ backgroundColor: 'black' }}
 >
- <Image
-                     src="/image/hero.png"
-                     alt="Intellica AI Dashboard"
-                     width={800}
-                     height={600}
-                     className="img-fluid"
-                     priority
-                   />
+  <Image
+  src="/image/login.png"
+  alt="Auth check"
+  width={400}
+  height={400}
+  style={{ objectFit: 'contain' }}
+  priority
+/>
 </div>
 
         </motion.div>
