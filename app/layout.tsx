@@ -8,7 +8,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <div className='mt-5'>{children}</div>
+        <div className=''>{children}</div>
         
         <BootstrapClient />
        <Script

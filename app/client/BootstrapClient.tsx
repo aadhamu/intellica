@@ -267,7 +267,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                             <i className="bi bi-person me-2"></i>Profile
                           </Link>
                         </li>
-                        {(user.user_type === 0 || user.user_type === 1) && (
+                        {( user.user_type === 1) && (
                           <li>
                             <Link className="dropdown-item" href="/user/blog/add">
                               <i className="bi bi-plus-circle me-2"></i>Add Blog

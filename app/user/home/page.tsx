@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import axios from '../../../lib/axios';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { FiArrowRight, FiCheck, FiUsers, FiMessageSquare, FiCalendar, FiSearch } from 'react-icons/fi';
+import { FiArrowRight, FiCheck } from 'react-icons/fi';
 
 export default function Home() {
   const router = useRouter();
@@ -58,25 +58,29 @@ export default function Home() {
   ];
 
   return (
-    <div className="bg-light" style={{ backgroundColor: '#f8fbff' }}>
+    <div style={{ overflowX: 'hidden' }} className="bg-light">
       {/* Floating Background Elements */}
-      <div className="position-absolute overflow-hidden">
-        {[...Array(15)].map((_, i) => (
-          <div 
+      <div className="position-relative overflow-hidden">
+        {[...Array(10)].map((_, i) => (
+          <div
             key={i}
             className="position-absolute rounded-circle bg-primary bg-opacity-10"
             style={{
-              // Your styles here
+              width: 100,
+              height: 100,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              zIndex: 0
             }}
           />
         ))}
       </div>
 
       {/* Hero Section */}
-      <section className="min-vh-100 d-flex align-items-center position-relative py-10 mt-5">
-        <div className="container">
+      <section className="min-vh-100 d-flex align-items-center position-relative py-5">
+        <div className="container px-3">
           <div className="row align-items-center">
-            <div className="col-lg-6">
+            <div className="col-lg-6 mb-5 mb-lg-0">
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -85,20 +89,20 @@ export default function Home() {
                 <div className="badge bg-primary bg-opacity-10 text-primary mb-4 px-3 py-2 rounded-pill">
                   AI-Powered Solutions
                 </div>
-                <h1 className="display-3 fw-bold mb-5">
+                <h1 className="display-4 fw-bold mb-4">
                   <span className="text-gradient">Transform</span> Your Business With Intelligent AI
                 </h1>
-                <p className="lead text-muted mb-6">
+                <p className="lead text-muted mb-4">
                   Intellica delivers cutting-edge artificial intelligence solutions that propel your business into the future with precision and efficiency.
                 </p>
-                <div className="d-flex flex-wrap gap-4">
+                <div className="d-flex flex-wrap gap-3">
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Link href="/user/services" className="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow">
+                    <Link href="/user/services" className="btn btn-primary px-4 py-2 rounded-pill shadow">
                       Get Started
                     </Link>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Link href="/user/consultants/view" className="btn btn-outline-primary btn-lg px-5 py-3 rounded-pill">
+                    <Link href="/user/consultants/view" className="btn btn-outline-primary px-4 py-2 rounded-pill">
                       Live Demo
                     </Link>
                   </motion.div>
@@ -130,9 +134,9 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section className="py-12 bg-white position-relative">
-        <div className="container">
-          <div className="row justify-content-center mb-8">
+      <section className="py-5 bg-white">
+        <div className="container px-3">
+          <div className="row justify-content-center mb-5">
             <div className="col-lg-8 text-center">
               <motion.div
                 initial={{ opacity: 0 }}
@@ -140,18 +144,18 @@ export default function Home() {
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
               >
-                <span className="badge bg-primary bg-opacity-10 text-primary mb-4">OUR SERVICES</span>
-                <h2 className="display-4 fw-bold mb-5">
+                <span className="badge bg-primary bg-opacity-10 text-primary mb-3">OUR SERVICES</span>
+                <h2 className="display-5 fw-bold mb-4">
                   <span className="text-gradient">AI Solutions</span> For Modern Businesses
                 </h2>
-                <p className="lead text-muted mb-6">
+                <p className="lead text-muted">
                   We deliver custom AI solutions that solve real business challenges and create measurable impact.
                 </p>
               </motion.div>
             </div>
           </div>
-          
-          <div className="row g-5">
+
+          <div className="row g-4">
             {services.map((service, index) => (
               <div key={index} className="col-md-4">
                 <motion.div
@@ -162,18 +166,18 @@ export default function Home() {
                   whileHover={{ y: -10 }}
                   className="card h-100 border-0 shadow-sm overflow-hidden"
                 >
-                  <div className="ratio ratio-16x9">
+                  <div className="ratio ratio-16x9 position-relative">
                     <Image
                       src={service.image}
                       alt={service.title}
-                      style={{ objectFit: 'cover' }}
                       fill
-                      className="object-cover"
+                      className="object-fit-cover"
+                      style={{ objectFit: 'cover' }}
                     />
                   </div>
                   <div className="card-body p-4">
-                    <h3 className="h4 fw-bold mb-4">{service.title}</h3>
-                    <p className="text-muted mb-4">{service.description}</p>
+                    <h3 className="h5 fw-bold mb-3">{service.title}</h3>
+                    <p className="text-muted">{service.description}</p>
                     <Link href="#" className="btn btn-link text-primary p-0">
                       Learn more <FiArrowRight className="ms-1" />
                     </Link>
@@ -186,35 +190,35 @@ export default function Home() {
       </section>
 
       {/* Solutions Section */}
-      <section className="py-12" style={{ backgroundColor: '#f0f8ff' }}>
-        <div className="container">
+      <section className="py-5" style={{ backgroundColor: '#f0f8ff' }}>
+        <div className="container px-3">
           <div className="row align-items-center">
-            <div className="col-lg-6 mb-6 mb-lg-0">
+            <div className="col-lg-6 mb-4 mb-lg-0">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
               >
-                <span className="badge bg-primary bg-opacity-10 text-primary mb-4">INTELLIGENT SOLUTIONS</span>
-                <h2 className="display-4 fw-bold mb-5">
+                <span className="badge bg-primary bg-opacity-10 text-primary mb-3">INTELLIGENT SOLUTIONS</span>
+                <h2 className="display-5 fw-bold mb-4">
                   <span className="text-gradient">Tailored AI</span> For Your Industry
                 </h2>
-                <p className="lead text-muted mb-6">
+                <p className="lead text-muted mb-4">
                   Our platform combines cutting-edge AI technology with industry-specific expertise to deliver reliable, scalable solutions.
                 </p>
-                
-                <div className="row g-4">
+
+                <div className="row g-3">
                   {[
-                    { icon: <FiCheck className="text-primary me-2" />, text: 'Customized implementation' },
-                    { icon: <FiCheck className="text-primary me-2" />, text: 'Enterprise-grade security' },
-                    { icon: <FiCheck className="text-primary me-2" />, text: '24/7 expert support' },
-                    { icon: <FiCheck className="text-primary me-2" />, text: 'Seamless integration' }
-                  ].map((item, i) => (
+                    'Customized implementation',
+                    'Enterprise-grade security',
+                    '24/7 expert support',
+                    'Seamless integration'
+                  ].map((text, i) => (
                     <div key={i} className="col-md-6">
-                      <div className="d-flex align-items-center mb-3">
-                        {item.icon}
-                        <span>{item.text}</span>
+                      <div className="d-flex align-items-center">
+                        <FiCheck className="text-primary me-2" />
+                        <span>{text}</span>
                       </div>
                     </div>
                   ))}
@@ -227,25 +231,23 @@ export default function Home() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
-                className="position-relative"
               >
-                <div className="row g-5">
+                <div className="row g-4">
                   {solutions.map((solution, i) => (
                     <div key={i} className="col-md-6">
                       <div className="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                        <div className="ratio ratio-16x9">
+                        <div className="ratio ratio-16x9 position-relative">
                           <Image
                             src={solution.image}
                             alt={solution.title}
-                            width={600}
-                            height={400}
+                            fill
+                            className="object-fit-cover"
                             style={{ objectFit: 'cover' }}
-                            className="object-cover"
                           />
                         </div>
-                        <div className="card-body p-4">
-                          <h3 className="h5 fw-bold mb-3">{solution.title}</h3>
-                          <p className="text-muted small">{solution.description}</p>
+                        <div className="card-body p-3">
+                          <h3 className="h6 fw-bold mb-2">{solution.title}</h3>
+                          <p className="text-muted small mb-0">{solution.description}</p>
                         </div>
                       </div>
                     </div>
@@ -256,12 +258,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      {/* Add your CTA section here with proper spacing */}
-
-      {/* Footer */}
-      {/* Add your footer section here with proper spacing */}
     </div>
   );
 }
