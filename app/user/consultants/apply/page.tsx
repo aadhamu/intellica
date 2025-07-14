@@ -225,6 +225,8 @@ export default function ConsultantApplication() {
                   </fieldset>
 
                   <div className="mb-5">
+                        <div> don't have a cv <Link href="http://resumeapex.pages.dev">create one</Link></div>
+
                     <label htmlFor="cv" className="form-label">
                       Upload Your CV/Resume <span className="text-danger">*</span>
                     </label>
@@ -248,7 +250,6 @@ export default function ConsultantApplication() {
                              
                           </span>
                         </div>
-                        <div> don't have a cv <Link href="http://resumeapex.pages.dev">create one</Link></div>
                         <small className="text-muted">PDF, DOC, DOCX up to 2MB</small>
                       </div>
                     </div>
