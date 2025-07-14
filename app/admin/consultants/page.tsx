@@ -319,7 +319,7 @@ export default function ConsultantsAdmin() {
 function DocumentViewButton({ path, label }: { path: string, label: string }) {
   return (
     <a 
-      href={`http://localhost:/storage/${path}`}
+      href={``}
       target="_blank"
       rel="noopener noreferrer"
       className="btn btn-sm btn-outline-primary"
