@@ -42,12 +42,12 @@ export default function Home() {
   const solutions = [
     {
       title: 'AI Strategy',
-      description: 'Comprehensive roadmap for AI integration',
+      description: 'Comprehensive Plans for AI integration',
       image: '/image/ai-strategy.png'
     },
     {
       title: 'Smart Analytics',
-      description: 'Real-time business intelligence dashboards',
+      description: 'Real-time business intelligence management',
       image: '/image/smart-analytics.jpg'
     },
     {
@@ -109,7 +109,7 @@ export default function Home() {
                 </div>
               </motion.div>
             </div>
-            <div className="col-lg-6">
+            <div className="col-lg-6 mt-5">
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
