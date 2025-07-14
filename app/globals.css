@@ -92,3 +92,47 @@ body {
   padding-left: var(--padding-start);
   
 }
+/* Place in ClientLayout or globals.css */
+body.dark-mode {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+body.dark-mode .navbar,
+body.dark-mode .dropdown-menu,
+body.dark-mode .card,
+body.dark-mode .main-content {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+body.dark-mode .nav-link,
+body.dark-mode .navbar-brand,
+body.dark-mode .dropdown-item {
+  color: #fff !important;
+}
+
+body.dark-mode .nav-link.active:after {
+  background-color: #fff;
+}
+
+body.dark-mode .dropdown-item:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+body.dark-mode .btn-outline-primary {
+  border-color: #fff;
+  color: #fff;
+}
+
+body.dark-mode .btn-outline-primary:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+body.dark-mode .form-control {
+  background-color: #111;
+  color: #fff;
+  border-color: #333;
+}
