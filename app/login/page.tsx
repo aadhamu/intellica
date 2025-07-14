@@ -146,20 +146,22 @@ export default function AuthForm() {
           animate={{ x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div
-  className="w-100 d-flex justify-content-center align-items-center p-3 p-md-5"
-  style={{ backgroundColor: 'black' }}
->
- <Image
-                     src="/image/hero.png"
-                     alt="Intellica AI Dashboard"
-                     width={800}
-                     height={600}
-                     className="img-fluid"
-                     priority
-                   />
+        <div className="w-100 d-flex justify-content-center align-items-center p-3 p-md-5 bg-black">
+  <div style={{ position: 'relative', width: '100%', maxWidth: '400px', height: '400px' }}>
+    <Image
+      src="/image/login.png"
+      alt="Auth check"
+      fill
+      priority
+      sizes="(max-width: 768px) 100vw, 400px"
+      style={{
+        objectFit: 'contain',
+        width: '100%',
+        height: '100%'
+      }}
+    />
+  </div>
 </div>
-
         </motion.div>
 
         {/* Form Column */}
