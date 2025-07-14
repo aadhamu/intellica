@@ -151,8 +151,8 @@ export default function AuthForm() {
   style={{ backgroundColor: 'black' }}
 >
   <Image
-  src="https://intellica-g0ud.onrender.com/image/login.png"
-  alt="Auth illustration"
+  src="image/login.png"
+  alt="Auth check"
   width={400}
   height={400}
   style={{ objectFit: 'contain' }}

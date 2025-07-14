@@ -9,6 +9,7 @@ import { getCookie, deleteCookie } from 'cookies-next';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../globals.css';
 import * as bootstrap from 'bootstrap';
+import { toast } from 'react-toastify';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -65,10 +66,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, []);
 
   const handleLogout = () => {
-    deleteCookie('auth_token');
-    localStorage.removeItem('token');
-    router.push('/login');
-  };
+  deleteCookie('auth_token');
+  localStorage.removeItem('token');
+  setUser(null);
+  toast.success('Logged out successfully');
+  router.push('/login');
+};
 
   const getAccessibleLinks = () => {
     if (!user) return [];

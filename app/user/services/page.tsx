@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { motion } from 'framer-motion'
 import Link from 'next/link';
 import Image from 'next/image';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap-icons/font/bootstrap-icons.css' // Add this line
 
 export default function ServicesPage() {
   const services = [
