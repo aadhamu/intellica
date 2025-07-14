@@ -151,7 +151,7 @@ export default function AuthForm() {
   style={{ backgroundColor: 'black' }}
 >
   <Image
-  src="image/login.png"
+  src="/image/login.png"
   alt="Auth check"
   width={400}
   height={400}
