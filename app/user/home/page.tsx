@@ -77,7 +77,7 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="min-vh-100 d-flex align-items-center position-relative py-5">
+      <section className="min-vh-100 d-flex align-items-center position-relative py-5 mt-5">
         <div className="container px-3">
           <div className="row align-items-center">
             <div className="col-lg-6 mb-5 mb-lg-0">
