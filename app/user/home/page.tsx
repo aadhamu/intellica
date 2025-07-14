@@ -42,12 +42,12 @@ export default function Home() {
   const solutions = [
     {
       title: 'AI Strategy',
-      description: 'Comprehensive Plans for AI integration',
+      description: 'Comprehensive roadmap for AI integration',
       image: '/image/ai-strategy.png'
     },
     {
       title: 'Smart Analytics',
-      description: 'Real-time business intelligence management',
+      description: 'Real-time business intelligence dashboards',
       image: '/image/smart-analytics.jpg'
     },
     {
@@ -77,7 +77,7 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="min-vh-100 d-flex align-items-center position-relative py-5 mt-5">
+      <section className="min-vh-100 d-flex align-items-center position-relative py-5">
         <div className="container px-3">
           <div className="row align-items-center">
             <div className="col-lg-6 mb-5 mb-lg-0">
@@ -109,7 +109,7 @@ export default function Home() {
                 </div>
               </motion.div>
             </div>
-            <div className="col-lg-6 mt-5">
+            <div className="col-lg-6">
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
