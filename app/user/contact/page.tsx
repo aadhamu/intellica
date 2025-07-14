@@ -49,7 +49,7 @@ export default function PremiumContactPage() {
   };
 
   return (
-    <div className="position-relative min-vh-100 bg-light overflow-hidden mt-5">
+    <div className="position-relative min-vh-100 bg-light overflow-hidden ">
       {/* Background gradient */}
       <div className="position-absolute w-100 h-100 bg-gradient"></div>
 

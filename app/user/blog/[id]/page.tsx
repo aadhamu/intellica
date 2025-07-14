@@ -162,7 +162,7 @@ export default function BlogDetailPage() {
   };
 
   return (
-    <div className="bg-light min-vh-100 py-5 mt-5">
+    <div className="bg-light min-vh-100 py-5 ">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-9">

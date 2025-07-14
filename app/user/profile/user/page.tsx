@@ -135,7 +135,7 @@ const DeleteConfirmationModal = ({
   if (!show) return null;
 
   return (
-    <div className="modal fade show pt-5 mt-5" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)', }}>
+    <div className="modal fade show pt-5 " style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)', }}>
       <div className="modal-dialog modal-dialog-centered mt-5">
         <div className="modal-content border-danger">
           <div className="modal-header border-danger bg-danger text-white">

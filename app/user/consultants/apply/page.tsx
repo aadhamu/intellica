@@ -114,7 +114,7 @@ export default function ConsultantApplication() {
   if (!isMounted) return null;
 
   return (
-    <div className="min-vh-100 d-flex align-items-center bg-light py-5 mt-5">
+    <div className="min-vh-100 d-flex align-items-center bg-light py-5 ">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-8">

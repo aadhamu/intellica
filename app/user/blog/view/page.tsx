@@ -262,7 +262,7 @@ export default function BlogListPage() {
   }
 
   return (
-    <div className="container py-5 bg-white mt-5">
+    <div className="container py-5 bg-white ">
       <div className="text-center mb-5">
         <h1 className="display-5 fw-bold mb-3 text-primary">
           Latest Articles

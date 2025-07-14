@@ -7,7 +7,7 @@ import './about.css'; // Custom CSS for glass effect
 
 export default function About() {
   return (
-    <div className="container py-5 mt-5">
+    <div className="container py-5 ">
       {/* Intro Section */}
       <motion.div
         initial={{ opacity: 0, y: 60 }}

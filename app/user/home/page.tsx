@@ -178,7 +178,7 @@ export default function Home() {
                   <div className="card-body p-4">
                     <h3 className="h5 fw-bold mb-3">{service.title}</h3>
                     <p className="text-muted">{service.description}</p>
-                    <Link href="#" className="btn btn-link text-primary p-0">
+                    <Link href="user/services" className="btn btn-link text-primary p-0">
                       Learn more <FiArrowRight className="ms-1" />
                     </Link>
                   </div>
