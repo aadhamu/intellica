@@ -250,12 +250,7 @@ export default function BlogListPage() {
         <div className="p-5 rounded bg-white shadow-sm">
           <h4 className="mb-3">No blogs found</h4>
           <p className="text-muted mb-4">We couldn't find any blog posts to display.</p>
-          <Link
-            href="/blog/create"
-            className="btn btn-primary px-4 py-2 rounded-pill"
-          >
-            Create your first blog post
-          </Link>
+          
         </div>
       </div>
     );

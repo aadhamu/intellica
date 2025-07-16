@@ -203,7 +203,7 @@ const [searchPerformed, setSearchPerformed] = useState(false);
               <div className="card-header">
                 <div className="avatar-container">
                   <img
-                    src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${consultant.image_path}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/public/${consultant.image_path}`}
                     alt={consultant.name}
                     className="consultant-avatar"
                     onError={(e) => {
@@ -286,7 +286,7 @@ const [searchPerformed, setSearchPerformed] = useState(false);
             <p>We have more experts available. Contact us to discuss your specific needs.</p>
             <button 
               className="btn btn-light"
-              onClick={() => router.push('/contact')}
+              onClick={() => router.push('/user/contact')}
             >
               Contact Our Team
             </button>
@@ -309,7 +309,7 @@ const [searchPerformed, setSearchPerformed] = useState(false);
                 <div className="row">
                   <div className="col-md-4 text-center">
                     <img
-                      src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${selectedConsultant.image_path}`}
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/public/${selectedConsultant.image_path}`}
                       alt={selectedConsultant.name}
                       className="modal-avatar"
                       onError={(e) => {
