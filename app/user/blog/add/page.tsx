@@ -66,19 +66,23 @@ export default function AddBlogForm() {
 
     setIsSubmitting(true);
 
-    try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('content', formData.content);
-      if (formData.featured_image) {
-        formDataToSend.append('featured_image', formData.featured_image);
-      }
+try {
+  const token = localStorage.getItem('token');
+  const formDataToSend = new FormData();
+  formDataToSend.append('title', formData.title);
+  formDataToSend.append('content', formData.content);
+  if (formData.featured_image) {
+    formDataToSend.append('featured_image', formData.featured_image);
+  }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blogs`, {
-        method: 'POST',
-        body: formDataToSend,
-        credentials: 'include'
-      });
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blogs`, {
+    method: 'POST',
+    body: formDataToSend,
+    headers: {
+      'Authorization': `Bearer ${token}`, // required
+      // DO NOT manually set 'Content-Type' if using FormData
+    }
+  });
 
       if (!response.ok) {
         const errorData = await response.json();
