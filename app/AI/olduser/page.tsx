@@ -790,8 +790,8 @@ const extractJsonFromString = (str: string): BusinessPlanResponse | null => {
             <div className="spinner-border text-primary" style={{width: '3rem', height: '3rem'}} role="status">
               <span className="visually-hidden">Loading...</span>
             </div>
-            <h5 className="mt-4 text-primary">Generating Your Business Plan</h5>
-            <p className="text-muted">Our AI is analyzing your business details...</p>
+            <h5 className="mt-4 text-primary">Our AI is analyzing your business details...</h5>
+            <p className="text-muted">This plan is AI-generated and may contain inaccuracies. Please verify details before acting on them</p>
           </div>
         ) : renderResponse()}
       </div>

@@ -567,7 +567,7 @@ Be concise, professional, and only return valid JSON matching the above structur
                     <span className="visually-hidden">Loading...</span>
                   </div>
                   <h5 className="mt-4 text-primary">Analyzing Your Finances</h5>
-                  <p className="text-muted">Generating your financial report...</p>
+                  <p className="text-muted">This plan is AI-generated and may contain inaccuracies. Please verify details before acting on them</p>
                 </div>
               ) : renderResponse()}
             </div>

@@ -873,7 +873,8 @@ const renderResponse = () => {
   {loading ? (
     <div className="text-center py-5">
       <div className="spinner-border text-primary" role="status" />
-      <p className="mt-3">Generating business plan...</p>
+      <p className="mt-3">Generating business plan... </p>
+      <p className="text-muted">This plan is AI-generated and may contain inaccuracies. Please verify details before acting on them</p>
     </div>
   ) : renderResponse()}
 </div>
