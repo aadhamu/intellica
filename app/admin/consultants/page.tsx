@@ -316,7 +316,7 @@ export default function ConsultantsAdmin() {
 }
 
 // Helper component for document viewing
-function DocumentViewButton({ path, label }: { path: string, label: string }) {
+function DocumentViewButton({ path, label }: { path: string; label: string }) {
   const fileUrl = `${process.env.NEXT_PUBLIC_API_URL}/storage/${path}`;
   
   return (
@@ -327,10 +327,9 @@ function DocumentViewButton({ path, label }: { path: string, label: string }) {
       className="btn btn-sm btn-outline-primary"
     >
       {label}
-    </a>
-  );
+    </a>
+  );
 }
-
 
 // Helper function for status badge classes
 function getStatusBadgeClass(status: string): string {
