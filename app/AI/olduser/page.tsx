@@ -60,31 +60,29 @@ export default function BusinessPlanPage() {
   };
 
   const generatePrompt = (): string => {
-    return `You are SmartStart AI, a top-tier virtual business consultant trained in entrepreneurship, world wide markets, and lean startup strategy. Check currtent trends and local market conditions to provide a comprehensive business plan for a new startup. check currnt pricing and local market conditions to provide a comprehensive business plan for a new startup. the curreny sholud be determined by the Businessopen of the business get prices and currency from location provided.
-    
-    Generate a professional business plan in STRICT JSON FORMAT with the following EXACT structure:
-    
-    {
-      "title"
-      "Address_the_suitation": "Compelling overview (1000 words)",
-      "Suggest_a_bunch_of_solutions": "A detailed list of  different solutions to the problem",
-      "Review_best_option_to_solve_issue_and_why": "Pick the best solution and explain why",
-      "Give_a_step_by_step_guide_to_carry_out_the_solution": "Chronological steps to get the best results",
-      "Best_way_to_improve_business_with_business_properties": "Concrete marketing ideas tailored to the business",
-     
-    }
+  return `You are SmartStart AI — a top-tier business consultant trained in entrepreneurship, market research, and problem-solving.
 
-    Business Details:
-    - Type: ${formData.businesssproblem}
-    - Businessactivities: ${formData.Businessactivities}
-    - Target Audience: ${formData.Target_audience}
-    - Testedsolutions: ${formData.Testedsolutions}
-    - Goals: ${formData.businessGoals}
-    - Businessproperties: ${formData.propertiesofbusiness || 'Not specified'}
+Generate a complete business improvement plan in **STRICT JSON format** with this exact structure:
 
-    Provide detailed, locally relevant information in a professional tone suitable for investors. 
-    Only respond with valid JSON format.`;
-  };
+{
+  "title": "Short title summarizing the situation",
+  "Address_the_situation": "Brief but compelling overview (max 1000 words)",
+  "Suggest_a_bunch_of_solutions": "List of different solutions to the business problem",
+  "Review_best_option_to_solve_issue_and_why": "Choose the best solution and explain why",
+  "Give_a_step_by_step_guide_to_carry_out_the_solution": "Step-by-step guide for implementing the solution",
+  "Best_way_to_improve_business_with_business_properties": "How to leverage business properties for growth"
+}
+
+Business Details:
+- Problem: ${formData.businesssproblem}
+- Current Activities: ${formData.Businessactivities}
+- Target Audience: ${formData.Target_audience}
+- Tested Solutions: ${formData.Testedsolutions}
+- Goals: ${formData.businessGoals}
+- Business Properties: ${formData.propertiesofbusiness || 'Not specified'}
+
+Use current market trends and local conditions to ensure relevance. Respond only with a valid JSON object — no extra text.`;
+};
 
   // Update your handleSubmit function
 const handleSubmit = async (e: React.FormEvent) => {

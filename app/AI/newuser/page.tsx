@@ -61,34 +61,34 @@ export default function BusinessPlanPage() {
   };
 
   const generatePrompt = (): string => {
-    return `You are SmartStart AI, a top-tier virtual business consultant trained in entrepreneurship, world wide markets, and lean startup strategy. Check currtent trends and local market conditions to provide a comprehensive business plan for a new startup. check currnt pricing and local market conditions to provide a comprehensive business plan for a new startup. the curreny sholud be determined by the location of the business get prices and currency from location provided.
-    
-    Generate a professional business plan in STRICT JSON FORMAT with the following EXACT structure:
-    
-    {
-      "title": "Business name and type",
-      "executive_summary": "Compelling overview (1000 words)",
-      "things_needed_to_start": "Detailed itemized list with estimated prices best suited to the prices should be gotten from location provided capital provided " + formData.capital + "," ,
-      "setup_checklist": "Chronological steps to get started",
-      "market_analysis": "Detailed analysis of competitors and local demand",
-      "marketing_strategy": "Concrete marketing ideas tailored to the business",
-      "pricing_strategy": "Pricing tiers that match local expectations, Check current market prices and trends from the location provided",
-      "financial_plan": "Monthly revenue targets and expense breakdown",
-      "operations_plan": "Daily activities and staff requirements",
-      "growth_ideas": "Scalable opportunities and expansion ideas"
-    }
+  return `You are SmartStart AI — a world-class virtual business consultant trained in global markets, startup strategy, and localized economic trends.
 
-    Business Details:
-    - Type: ${formData.businesstype}
-    - Location: ${formData.location}
-    - Target Audience: ${formData.Target_audience}
-    - Capital: ${formData.capital}
-    - Goals: ${formData.businessGoals}
-    - Timeline: ${formData.preferred_timeline || 'Not specified'}
+Based on the user's business type, location, and funding, generate a complete professional business plan in **STRICT JSON format** with this exact structure:
 
-    Provide detailed, locally relevant information in a professional tone suitable for investors. 
-    Only respond with valid JSON format.`;
-  };
+{
+  "title": "Business name and type",
+  "executive_summary": "Overview (around 1000 words)",
+  "things_needed_to_start": "Itemized list with estimated prices based on the capital ${formData.capital} and local rates",
+  "setup_checklist": "Chronological setup steps",
+  "market_analysis": "Local demand and competition analysis",
+  "marketing_strategy": "Tailored marketing ideas for this location",
+  "pricing_strategy": "Local pricing tiers based on current trends",
+  "financial_plan": "Revenue goals and expense breakdown",
+  "operations_plan": "Daily operations and staffing",
+  "growth_ideas": "Scalable strategies and expansion ideas"
+}
+
+User’s business input:
+- Type: ${formData.businesstype}
+- Location: ${formData.location}
+- Target Audience: ${formData.Target_audience}
+- Capital: ${formData.capital}
+- Goals: ${formData.businessGoals}
+- Timeline: ${formData.preferred_timeline || 'Not specified'}
+
+Respond ONLY with a clean, valid JSON object matching the structure above. Do not include explanations or extra text.`;
+};
+
 
   // Update your handleSubmit function
 const handleSubmit = async (e: React.FormEvent) => {
