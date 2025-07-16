@@ -49,8 +49,8 @@ export async function POST(req: NextRequest) {
      const apiResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
   method: 'POST',
   headers: {
-    // 'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-    'Authorization': 'Bearer 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',
+    'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    
     'Content-Type': 'application/json',
     'HTTP-Referer': 'http://localhost:3000', // required by OpenRouter
     'X-Title': 'Intellica'
