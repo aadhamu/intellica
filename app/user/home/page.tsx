@@ -103,7 +103,7 @@ export default function Home() {
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link href="/user/consultants/view" className="btn btn-outline-primary px-4 py-2 rounded-pill">
-                      Live Demo
+                      Live Connection
                     </Link>
                   </motion.div>
                 </div>
