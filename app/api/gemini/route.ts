@@ -29,29 +29,26 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // 3. Call DeepSeek via OpenRouter with JSON response forced
-    const apiResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    // 3. Call Groq API
+    const apiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'http://localhost:3000',
-        'X-Title': 'Business Plan Generator'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-       model: "mistralai/Mistral-7B-Instruct-v0.2:free",
+        model: "mixtral-8x7b-32768",
         messages: [{
           role: 'user',
           content: prompt
-        }],
-        response_format: { type: 'json_object' } // Force JSON response
+        }]
       })
     })
 
     // 4. Handle API errors
     if (!apiResponse.ok) {
       const errorData = await apiResponse.json().catch(() => ({}))
-      console.error('OpenRouter Error:', errorData)
+      console.error('Groq API Error:', errorData)
       return NextResponse.json(
         { error: errorData.error?.message || 'API request failed' },
         { status: apiResponse.status }
@@ -63,16 +60,13 @@ export async function POST(req: NextRequest) {
     let rawContent = data?.choices?.[0]?.message?.content
     console.log("AI Raw Response:", rawContent)
 
-    // Handle cases where the response might be a stringified JSON
     if (typeof rawContent === 'string') {
       try {
-        // Check if the response is wrapped in markdown code blocks
         const codeBlockMatch = rawContent.match(/```(?:json)?\n([\s\S]*?)\n```/)
         if (codeBlockMatch) {
           rawContent = codeBlockMatch[1]
         }
-        
-        // Parse the content to ensure it's valid JSON
+
         const parsedContent = JSON.parse(rawContent)
         return NextResponse.json(parsedContent)
       } catch (parseError) {
@@ -84,7 +78,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // If we get here, it's already a JSON object
     return NextResponse.json(rawContent)
 
   } catch (error) {
