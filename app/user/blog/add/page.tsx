@@ -67,8 +67,9 @@ export default function AddBlogForm() {
     setIsSubmitting(true);
 
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
+        const token = localStorage.getItem('token');
+        const formDataToSend = new FormData();
+        formDataToSend.append('title', formData.title);
       formDataToSend.append('content', formData.content);
       if (formData.featured_image) {
         formDataToSend.append('featured_image', formData.featured_image);
@@ -77,7 +78,11 @@ export default function AddBlogForm() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blogs`, {
         method: 'POST',
         body: formDataToSend,
-        credentials: 'include'
+        credentials: 'include',
+         headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
       });
 
       if (!response.ok) {
