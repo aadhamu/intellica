@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "choozplatform.com",
-        pathname: "/ai-business/blog_images/**", // ✅ Adjusted path for your image URLs
+        pathname: "/ai-business/public/blog_images/**", // ✅ Adjusted path for your image URLs
       },
     ],
     loader: 'default',
