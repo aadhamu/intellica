@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
         'X-Title': 'Business Plan Generator'
       },
       body: JSON.stringify({
-       model: 'gryphe/mythomax-l2-13b',
+       model: 'gryphe/mythomax-l2-13b:free',
         messages: [{
           role: 'user',
           content: prompt
