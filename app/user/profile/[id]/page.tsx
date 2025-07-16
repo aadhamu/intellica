@@ -70,7 +70,7 @@ export default function UpdateConsultantByUserId() {
         });
 
         if (data.image_path) {
-          setImagePreview(`${process.env.NEXT_PUBLIC_API_URL}/storage/${data.image_path}`);
+          setImagePreview(`${process.env.NEXT_PUBLIC_API_URL}/public/blog_images/${data.image_path}`);
         }
       } catch (error: any) {
         toast.error('Failed to fetch consultant data');
