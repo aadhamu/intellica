@@ -33,13 +33,13 @@ export async function POST(req: NextRequest) {
     const apiResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer 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',
+        'Authorization': 'Bearer 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',
         'Content-Type': 'application/json',
         'HTTP-Referer': 'http://localhost:3000',
         'X-Title': 'Business Plan Generator'
       },
       body: JSON.stringify({
-       model: "mistralai/Mistral-7B-Instruct-v0.2:free",
+       model:  "openchat/openchat-3.5-1210:free",
         messages: [{
           role: 'user',
           content: prompt
