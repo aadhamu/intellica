@@ -30,20 +30,39 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Call Groq API
-    const apiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: "llama3-70b-8192",
-        messages: [{
-          role: 'user',
-          content: prompt
-        }]
-      })
-    })
+    // const apiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    //   method: 'POST',
+    //   headers: {
+    //     // 'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    //     'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     model: "llama3-70b-8192",
+    //     messages: [{
+    //       role: 'user',
+    //       content: prompt
+    //     }]
+    //   })
+    // })
+
+     const apiResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    // 'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    'Authorization': 'Bearer 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',
+    'Content-Type': 'application/json',
+    'HTTP-Referer': 'http://localhost:3000', // required by OpenRouter
+    'X-Title': 'YourAppName'
+  },
+  body: JSON.stringify({
+    model: 'deepseek-ai/deepseek-coder:free', // or any OpenRouter-supported model
+    messages: [
+      { role: 'user', content: prompt }
+    ]
+  })
+})
+
 
     // 4. Handle API errors
     if (!apiResponse.ok) {
