@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     const apiResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Authorization': 'Bearer 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',
         'Content-Type': 'application/json',
         'HTTP-Referer': 'http://localhost:3000',
         'X-Title': 'Business Plan Generator'
