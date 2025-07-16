@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
         'X-Title': 'Business Plan Generator'
       },
       body: JSON.stringify({
-       model: "mistralai/Mistral-7B-Instruct-v0.2:free",
+       model: "mistralai/Mistral-7B-Instruct-v0.2",
         messages: [{
           role: 'user',
           content: prompt
