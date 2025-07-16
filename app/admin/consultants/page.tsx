@@ -317,7 +317,7 @@ export default function ConsultantsAdmin() {
 
 // Helper component for document viewing
 function DocumentViewButton({ path, label }: { path: string; label: string }) {
-  const fileUrl = `${process.env.NEXT_PUBLIC_API_URL}/storage/${path}`;
+  const fileUrl = `${process.env.NEXT_PUBLIC_API_URL}/${path}`;
   
   return (
     <a 
