@@ -106,7 +106,6 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
         planResponse = typeof raw === 'string' ? JSON.parse(raw) : raw;
       } catch (parseError) {
         console.warn('JSON parse failed, falling back:', parseError);
-
         planResponse = {
           title: `${formData.businesstype} Business Plan`,
           executive_summary: raw || 'No content received',
@@ -121,10 +120,8 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
         };
       }
 
-      // Set business plan state
       setResponse(planResponse);
 
-      // Save to localStorage as fallback
       try {
         const plans = JSON.parse(localStorage.getItem('savedPlans') || '[]');
         plans.push({
