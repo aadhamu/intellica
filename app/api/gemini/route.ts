@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     }
 
     const payload = {
-      model: 'deepseek-ai/deepseek-chat',
+      model: 'deepseek/deepseek-chat-v3-0324:free',
       messages: [{ role: 'user', content: prompt }],
       response_format: { type: 'json_object' }
     };
