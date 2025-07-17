@@ -39,7 +39,8 @@ export async function POST(req: NextRequest) {
     'X-Title': 'Business Plan Generator'
   },
   body: JSON.stringify({
-    model:'deepseek/deepseek-chat-v3-0324:free',// Updated model ID
+   model: 'deepseek-ai/deepseek-chat',
+// Updated model ID
     messages: [{
       role: 'user',
       content: prompt
