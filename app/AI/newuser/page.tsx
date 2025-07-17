@@ -699,6 +699,8 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
                     type="submit"
                     className="btn btn-primary btn-lg"
                     disabled={loading}
+                    data-bs-toggle="modal"
+                    data-bs-target="#responseModal"
                   >
                     {loading ? (
                       <>
@@ -722,16 +724,55 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
         </div>
       </div>
 
-      {/* Response Section */}
-      <div className="row justify-content-center mt-5">
-        <div className="col-lg-12">
-          {loading ? (
-            <div className="text-center py-5">
-              <div className="spinner-border text-primary" role="status" />
-              <p className="mt-3">Generating business plan...</p>
-              <p className="text-muted">This plan is AI-generated and may contain inaccuracies. Please verify details before acting on them</p>
+      <div
+        className="modal fade"
+        id="responseModal"
+        tabIndex={-1}
+        aria-labelledby="responseModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-lg modal-dialog-scrollable">
+          <div className="modal-content rounded-4 shadow-sm">
+            <div className="modal-header bg-primary text-white rounded-top-4">
+              <h5 className="modal-title" id="responseModalLabel">Your Business Plan</h5>
+              <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-          ) : renderResponse()}
+
+            <div className="modal-body p-4">
+              {loading ? (
+                <div className="text-center py-5">
+                  <div className="spinner-border text-primary" role="status" />
+                  <p className="mt-3">Generating business plan...</p>
+                  <p className="text-muted">This plan is AI-generated and may contain inaccuracies. Please verify details before acting on them</p>
+                </div>
+              ) : renderResponse()}
+            </div>
+
+            <div className="modal-footer bg-white border-0">
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              {response && typeof response !== 'string' && (
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={downloadAsWord}
+                  disabled={saving}
+                >
+                  {saving ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                      Preparing Download...
+                    </>
+                  ) : 'Download as Word'}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
