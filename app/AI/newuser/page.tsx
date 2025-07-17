@@ -52,6 +52,7 @@ export default function BusinessPlanPage() {
   const [response, setResponse] = useState<BusinessPlanResponse | string>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -121,6 +122,7 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
       }
 
       setResponse(planResponse);
+      setShowModal(true);
 
       try {
         const plans = JSON.parse(localStorage.getItem('savedPlans') || '[]');
@@ -141,6 +143,7 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
           ? `Error: ${error.response?.data?.error || error.message}`
           : 'Failed to generate business plan'
       );
+      setShowModal(true);
     } finally {
       setLoading(false);
     }
@@ -409,9 +412,10 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
       preferred_timeline: ''
     });
     setResponse(null);
+    setShowModal(false);
   };
 
-  const renderResponse = () => {
+  const renderModalContent = () => {
     if (typeof response === 'string') {
       return (
         <div className="alert alert-danger p-3 rounded">
@@ -518,7 +522,7 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
     };
 
     return (
-      <div className="business-plan-container mt-5">
+      <div className="business-plan-container">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h3 className="text-primary mb-0 fw-bold">
             {response.title || 'Business Plan'}
@@ -590,12 +594,6 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
           
           .section-content p {
             text-align: justify;
-          }
-          
-          @media (max-width: 768px) {
-            .business-plan-container {
-              padding: 0 10px;
-            }
           }
         `}</style>
       </div>
@@ -699,8 +697,6 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
                     type="submit"
                     className="btn btn-primary btn-lg"
                     disabled={loading}
-                    data-bs-toggle="modal"
-                    data-bs-target="#responseModal"
                   >
                     {loading ? (
                       <>
@@ -724,57 +720,61 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
         </div>
       </div>
 
-      <div
-        className="modal fade"
-        id="responseModal"
-        tabIndex={-1}
-        aria-labelledby="responseModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-lg modal-dialog-scrollable">
-          <div className="modal-content rounded-4 shadow-sm">
-            <div className="modal-header bg-primary text-white rounded-top-4">
-              <h5 className="modal-title" id="responseModalLabel">Your Business Plan</h5>
-              <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div className="modal-body p-4">
-              {loading ? (
-                <div className="text-center py-5">
-                  <div className="spinner-border text-primary" role="status" />
-                  <p className="mt-3">Generating business plan...</p>
-                  <p className="text-muted">This plan is AI-generated and may contain inaccuracies. Please verify details before acting on them</p>
-                </div>
-              ) : renderResponse()}
-            </div>
-
-            <div className="modal-footer bg-white border-0">
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              {response && typeof response !== 'string' && (
+      {/* Modal for displaying the response */}
+      {showModal && (
+        <div className="modal fade show d-block" tabIndex={-1} role="dialog" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div className="modal-content">
+              <div className="modal-header bg-primary text-white">
+                <h5 className="modal-title">
+                  {typeof response === 'object' && response ? response.title : 'Business Plan'}
+                </h5>
                 <button
                   type="button"
-                  className="btn btn-success"
-                  onClick={downloadAsWord}
-                  disabled={saving}
+                  className="btn-close btn-close-white"
+                  onClick={() => setShowModal(false)}
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+                {loading ? (
+                  <div className="text-center py-5">
+                    <div className="spinner-border text-primary" role="status" />
+                    <p className="mt-3">Generating business plan...</p>
+                    <p className="text-muted">This plan is AI-generated and may contain inaccuracies. Please verify details before acting on them</p>
+                  </div>
+                ) : renderModalContent()}
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowModal(false)}
                 >
-                  {saving ? (
-                    <>
-                      <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-                      Preparing Download...
-                    </>
-                  ) : 'Download as Word'}
+                  Close
                 </button>
-              )}
+                {response && typeof response === 'object' && (
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={downloadAsWord}
+                    disabled={saving}
+                  >
+                    {saving ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                        Downloading...
+                      </>
+                    ) : (
+                      'Download as DOCX'
+                    )}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
