@@ -2,8 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    // Validate content type
+    console.log('[START] Incoming request');
+
+    // 1. Validate headers
     const contentType = req.headers.get('content-type');
+    console.log('[DEBUG] content-type:', contentType);
+
     if (!contentType?.includes('application/json')) {
       return NextResponse.json(
         { error: 'Content-Type must be application/json' },
@@ -11,11 +15,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Parse and validate body
+    // 2. Parse JSON body
     let prompt: string;
     try {
       const body = await req.json();
+      console.log('[DEBUG] Request body:', body);
       prompt = body.prompt;
+
       if (!prompt || typeof prompt !== 'string') {
         return NextResponse.json(
           { error: 'Prompt must be a non-empty string' },
@@ -23,61 +29,80 @@ export async function POST(req: NextRequest) {
         );
       }
     } catch (e) {
+      console.error('[ERROR] Invalid JSON:', e);
       return NextResponse.json(
         { error: 'Invalid JSON body' },
         { status: 400 }
       );
     }
 
-    // Call DeepSeek via OpenRouter API
+    // 3. Call OpenRouter API
+    const openRouterKey = process.env.OPENROUTER_API_KEY;
+    if (!openRouterKey) {
+      console.error('[ERROR] Missing OPENROUTER_API_KEY');
+      return NextResponse.json(
+        { error: 'Missing OpenRouter API Key' },
+        { status: 500 }
+      );
+    }
+
+    const payload = {
+      model: 'deepseek-ai/deepseek-chat',
+      messages: [{ role: 'user', content: prompt }],
+      response_format: { type: 'json_object' }
+    };
+
+    console.log('[DEBUG] Sending payload to OpenRouter:', payload);
+
     const apiResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY || ''}`,
+        'Authorization': `Bearer ${openRouterKey}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': 'http://localhost:3000',
         'X-Title': 'Business Plan Generator'
       },
-      body: JSON.stringify({
-        model: 'deepseek-ai/deepseek-chat',
-        messages: [
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        response_format: { type: 'json_object' }
-      })
+      body: JSON.stringify(payload)
     });
 
-    // Handle non-200 responses
+    console.log('[DEBUG] OpenRouter response status:', apiResponse.status);
+
+    // 4. Handle errors from OpenRouter
     if (!apiResponse.ok) {
       const errorData = await apiResponse.json().catch(() => ({}));
-      console.error('OpenRouter API Error:', errorData);
+      console.error('[ERROR] OpenRouter returned error:', errorData);
       return NextResponse.json(
         { error: errorData?.error?.message || 'Failed to fetch from OpenRouter' },
         { status: apiResponse.status }
       );
     }
 
-    const responseData = await apiResponse.json();
-    let rawContent = responseData?.choices?.[0]?.message?.content;
+    // 5. Read response JSON
+    const data = await apiResponse.json();
+    console.log('[DEBUG] OpenRouter API response:', data);
 
-    // Debug raw output
-    console.log("AI Raw Response:", rawContent);
+    let rawContent = data?.choices?.[0]?.message?.content;
 
-    // Attempt to parse stringified JSON in markdown code block
+    if (!rawContent) {
+      console.error('[ERROR] No content in AI response');
+      return NextResponse.json(
+        { error: 'AI returned no content' },
+        { status: 500 }
+      );
+    }
+
+    // 6. Try to extract and parse JSON inside markdown code block
     if (typeof rawContent === 'string') {
-      try {
-        const codeBlockMatch = rawContent.match(/```(?:json)?\n([\s\S]*?)\n```/);
-        if (codeBlockMatch) {
-          rawContent = codeBlockMatch[1]; // extract inside markdown
-        }
+      const match = rawContent.match(/```(?:json)?\n([\s\S]*?)\n```/);
+      if (match) {
+        rawContent = match[1];
+      }
 
-        const parsedContent = JSON.parse(rawContent);
-        return NextResponse.json(parsedContent);
-      } catch (parseError) {
-        console.error('Failed to parse JSON:', parseError);
+      try {
+        const parsed = JSON.parse(rawContent);
+        return NextResponse.json(parsed);
+      } catch (err) {
+        console.error('[ERROR] Failed to parse JSON string:', rawContent, err);
         return NextResponse.json(
           {
             error: 'AI returned invalid JSON format',
@@ -88,11 +113,11 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Return raw content if it's already an object
+    // 7. Already JSON
     return NextResponse.json(rawContent);
 
   } catch (error) {
-    console.error('Unhandled Server Error:', error);
+    console.error('[FATAL ERROR] Server crash:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
