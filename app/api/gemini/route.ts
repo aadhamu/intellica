@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
   },
   body: JSON.stringify({
     model: 'deepseek/deepseek-chat-v3-0324', // or any OpenRouter-supported model
+    max_tokens: 1000,
     messages: [
       { role: 'user', content: prompt }
     ]
