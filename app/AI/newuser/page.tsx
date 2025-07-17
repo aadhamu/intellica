@@ -18,14 +18,14 @@ import { saveAs } from 'file-saver';
 type BusinessPlanResponse = {
   title: string;
   executive_summary: string;
-  things_needed_to_start: string;
-  market_analysis: string;
-  marketing_strategy: string;
-  financial_plan: string;
-  operations_plan: string;
-  setup_checklist?: string;
-  pricing_strategy?: string;
-  growth_ideas?: string;
+  things_needed_to_start: string | Record<string, any>;
+  market_analysis: string | Record<string, any>;
+  marketing_strategy: string | Record<string, any>;
+  financial_plan: string | Record<string, any>;
+  operations_plan: string | Record<string, any>;
+  setup_checklist?: string | Record<string, any>;
+  pricing_strategy?: string | Record<string, any>;
+  growth_ideas?: string | Record<string, any>;
   id?: string;
   created_at?: string;
 } | null;
@@ -121,10 +121,8 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
         };
       }
 
-      // Set business plan state
       setResponse(planResponse);
 
-      // Save to localStorage as fallback
       try {
         const plans = JSON.parse(localStorage.getItem('savedPlans') || '[]');
         plans.push({
@@ -155,54 +153,92 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
     setSaving(true);
 
     try {
-      const createNumberedList = (items: string | string[] | object) => {
+      const createNumberedList = (items: any) => {
         if (!items) return [];
-
-        let itemArray: string[] = [];
+        
         if (typeof items === 'string') {
-          itemArray = items.split('\n').filter(item => item.trim() !== '');
-        } else if (Array.isArray(items)) {
-          itemArray = items;
-        } else if (typeof items === 'object') {
-          itemArray = Object.entries(items).map(([key, value]) => 
-            `${key}: ${typeof value === 'object' ? JSON.stringify(value) : value}`
+          return items.split('\n')
+            .filter((item: string) => item.trim() !== '')
+            .map((item: string, index: number) => 
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${index + 1}. `, bold: true }),
+                  new TextRun(item.trim())
+                ],
+                spacing: { after: 100 }
+              })
+            );
+        }
+        
+        if (Array.isArray(items)) {
+          return items.map((item, index) => 
+            new Paragraph({
+              children: [
+                new TextRun({ text: `${index + 1}. `, bold: true }),
+                new TextRun(typeof item === 'object' ? JSON.stringify(item) : String(item))
+              ],
+              spacing: { after: 100 }
+            })
           );
         }
-
-        return itemArray.map((item, index) => 
-          new Paragraph({
-            children: [
-              new TextRun({ text: `${index + 1}. `, bold: true }),
-              new TextRun(item.trim())
-            ],
-            spacing: { after: 100 }
-          })
-        );
+        
+        if (typeof items === 'object') {
+          return Object.entries(items).map(([key, value], index) => 
+            new Paragraph({
+              children: [
+                new TextRun({ text: `${index + 1}. ${key}: `, bold: true }),
+                new TextRun(typeof value === 'object' ? JSON.stringify(value) : String(value))
+              ],
+              spacing: { after: 100 }
+            })
+          );
+        }
+        
+        return [];
       };
 
-      const createBulletList = (items: string | string[] | object) => {
+      const createBulletList = (items: any) => {
         if (!items) return [];
-
-        let itemArray: string[] = [];
+        
         if (typeof items === 'string') {
-          itemArray = items.split('\n').filter(item => item.trim() !== '');
-        } else if (Array.isArray(items)) {
-          itemArray = items;
-        } else if (typeof items === 'object') {
-          itemArray = Object.entries(items).map(([key, value]) => 
-            `${key}: ${typeof value === 'object' ? JSON.stringify(value) : value}`
+          return items.split('\n')
+            .filter((item: string) => item.trim() !== '')
+            .map((item: string) => 
+              new Paragraph({
+                children: [
+                  new TextRun({ text: '• ', bold: true }),
+                  new TextRun(item.trim())
+                ],
+                spacing: { after: 100 }
+              })
+            );
+        }
+        
+        if (Array.isArray(items)) {
+          return items.map((item) => 
+            new Paragraph({
+              children: [
+                new TextRun({ text: '• ', bold: true }),
+                new TextRun(typeof item === 'object' ? JSON.stringify(item) : String(item))
+              ],
+              spacing: { after: 100 }
+            })
           );
         }
-
-        return itemArray.map(item => 
-          new Paragraph({
-            children: [
-              new TextRun({ text: '• ', bold: true }),
-              new TextRun(item.trim())
-            ],
-            spacing: { after: 100 }
-          })
-        );
+        
+        if (typeof items === 'object') {
+          return Object.entries(items).map(([key, value]) => 
+            new Paragraph({
+              children: [
+                new TextRun({ text: '• ', bold: true }),
+                new TextRun(`${key}: ${typeof value === 'object' ? JSON.stringify(value) : String(value)}`)
+              ],
+              spacing: { after: 100 }
+            })
+          );
+        }
+        
+        return [];
       };
 
       const createFinancialTables = (financialData: any) => {
@@ -215,57 +251,60 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
         }
 
         const tables = [];
-        for (const [sectionName, sectionData] of Object.entries(financialData)) {
-          if (!sectionData) continue;
-
-          tables.push(
-            new Paragraph({
-              text: sectionName.replace(/_/g, ' ').toUpperCase(),
-              heading: HeadingLevel.HEADING_3,
-              spacing: { after: 100 }
-            })
-          );
-
-          if (typeof sectionData === 'object') {
-            const rows = Object.entries(sectionData).map(([key, value]) => (
-              new TableRow({
-                children: [
-                  new TableCell({
-                    children: [new Paragraph(key)],
-                    width: { size: 50, type: WidthType.PERCENTAGE }
-                  }),
-                  new TableCell({
-                    children: [new Paragraph(String(value))],
-                    width: { size: 50, type: WidthType.PERCENTAGE }
-                  })
-                ]
-              })
-            ));
+        
+        if (typeof financialData === 'object') {
+          for (const [sectionName, sectionData] of Object.entries(financialData)) {
+            if (!sectionData) continue;
 
             tables.push(
-              new Table({
-                width: { size: 100, type: WidthType.PERCENTAGE },
-                rows: [
-                  new TableRow({
-                    children: [
-                      new TableCell({
-                        children: [new Paragraph('Item')],
-                        shading: { fill: 'DDDDDD' }
-                      }),
-                      new TableCell({
-                        children: [new Paragraph('Value')],
-                        shading: { fill: 'DDDDDD' }
-                      })
-                    ]
-                  }),
-                  ...rows
-                ]
+              new Paragraph({
+                text: String(sectionName).replace(/_/g, ' ').toUpperCase(),
+                heading: HeadingLevel.HEADING_3,
+                spacing: { after: 100 }
               })
             );
-          } else {
-            tables.push(
-              new Paragraph({ text: String(sectionData), spacing: { after: 100 } })
-            );
+
+            if (typeof sectionData === 'object') {
+              const rows = Object.entries(sectionData).map(([key, value]) => (
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      children: [new Paragraph(key)],
+                      width: { size: 50, type: WidthType.PERCENTAGE }
+                    }),
+                    new TableCell({
+                      children: [new Paragraph(typeof value === 'object' ? JSON.stringify(value) : String(value))],
+                      width: { size: 50, type: WidthType.PERCENTAGE }
+                    })
+                  ]
+                })
+              ));
+
+              tables.push(
+                new Table({
+                  width: { size: 100, type: WidthType.PERCENTAGE },
+                  rows: [
+                    new TableRow({
+                      children: [
+                        new TableCell({
+                          children: [new Paragraph('Item')],
+                          shading: { fill: 'DDDDDD' }
+                        }),
+                        new TableCell({
+                          children: [new Paragraph('Value')],
+                          shading: { fill: 'DDDDDD' }
+                        })
+                      ]
+                    }),
+                    ...rows
+                  ]
+                })
+              );
+            } else {
+              tables.push(
+                new Paragraph({ text: String(sectionData), spacing: { after: 100 } })
+              );
+            }
           }
         }
 
@@ -273,7 +312,7 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
       };
 
       const sections = Object.entries(response)
-        .filter(([key]) => !['title', 'id', 'created_at'].includes(key))
+        .filter(([key]) => !['title', 'executive_summary', 'id', 'created_at'].includes(key))
         .flatMap(([key, value]) => {
           const sectionTitle = key.split('_').map(word => 
             word.charAt(0).toUpperCase() + word.slice(1)
@@ -292,7 +331,6 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
           switch(key) {
             case 'things_needed_to_start':
             case 'setup_checklist':
-            case 'pricing_strategy':
               content.push(...createNumberedList(value));
               break;
 
@@ -300,10 +338,12 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
               content.push(...createFinancialTables(value));
               break;
 
-            case 'market_analysis':
-            case 'marketing_strategy':
-            case 'operations_plan':
+            case 'pricing_strategy':
             case 'growth_ideas':
+              content.push(...createBulletList(value));
+              break;
+
+            default:
               if (typeof value === 'string') {
                 const paragraphs = value.split('\n\n');
                 paragraphs.forEach(para => {
@@ -313,16 +353,6 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
                     );
                   }
                 });
-              } else {
-                content.push(...createBulletList(value));
-              }
-              break;
-
-            default:
-              if (typeof value === 'string') {
-                content.push(
-                  new Paragraph({ text: value, spacing: { after: 100 } })
-                );
               } else {
                 content.push(...createBulletList(value));
               }
@@ -414,6 +444,42 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
     setResponse(null);
   };
 
+  const renderContent = (content: any, key: string) => {
+    if (!content) return null;
+
+    if (typeof content === 'string') {
+      return content.split('\n').map((paragraph: string, i: number) => (
+        <p key={i} className="mb-3">{paragraph}</p>
+      ));
+    }
+
+    if (Array.isArray(content)) {
+      return (
+        <ul className="list-group mb-3">
+          {content.map((item: any, index: number) => (
+            <li key={index} className="list-group-item border-0 ps-0 py-1 bg-transparent">
+              {typeof item === 'object' ? JSON.stringify(item) : item}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    if (typeof content === 'object') {
+      return (
+        <ul className="list-group mb-3">
+          {Object.entries(content).map(([subKey, value]) => (
+            <li key={subKey} className="list-group-item border-0 ps-0 py-1 bg-transparent">
+              <strong>{subKey.replace(/_/g, ' ')}:</strong> {value === undefined ? '' : (typeof value === 'object' ? JSON.stringify(value) : String(value))}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    return <pre className="mb-3">{JSON.stringify(content, null, 2)}</pre>;
+  };
+
   const renderResponse = () => {
     if (typeof response === 'string') {
       return (
@@ -430,95 +496,6 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
         </div>
       );
     }
-
-    const parseIfJson = (content: any) => {
-      if (typeof content === 'string') {
-        try {
-          return JSON.parse(content);
-        } catch {
-          return content;
-        }
-      }
-      return content;
-    };
-
-    const renderContent = (content: any, key: string) => {
-      const parsedContent = parseIfJson(content);
-      
-      switch(key) {
-        case 'things_needed_to_start':
-        case 'setup_checklist':
-          if (Array.isArray(parsedContent)) {
-            return (
-              <ol className="list-group list-group-numbered mb-3">
-                {parsedContent.map((item: any, index: number) => (
-                  <li key={index} className="list-group-item border-0 ps-0 py-1 bg-transparent">
-                    {typeof item === 'object' ? JSON.stringify(item) : item}
-                  </li>
-                ))}
-              </ol>
-            );
-          } else if (typeof parsedContent === 'object') {
-            return Object.entries(parsedContent).map(([category, items]) => (
-              <div key={category} className="mb-3">
-                <h6 className="text-muted">{category}</h6>
-                <ul className="list-group">
-                  {Array.isArray(items) ? items.map((item: any, i: number) => (
-                    <li key={i} className="list-group-item border-0 ps-0 py-1 bg-transparent">
-                      {typeof item === 'object' ? `${item.name}: ${item.cost_estimate}` : item}
-                    </li>
-                  )) : (
-                    <li className="list-group-item border-0 ps-0 py-1 bg-transparent">
-                      {JSON.stringify(items)}
-                    </li>
-                  )}
-                </ul>
-              </div>
-            ));
-          }
-          break;
-
-        case 'market_analysis':
-        case 'marketing_strategy':
-        case 'financial_plan':
-        case 'operations_plan':
-          if (typeof parsedContent === 'object') {
-            return (
-              <ul className="list-group mb-3">
-                {Object.entries(parsedContent).map(([subKey, value]) => (
-                  <li key={subKey} className="list-group-item border-0 ps-0 py-1 bg-transparent">
-                    <strong>{subKey.replace(/_/g, ' ')}:</strong> {value === undefined ? '' : (typeof value === 'object' ? JSON.stringify(value) : String(value))}
-                  </li>
-                ))}
-              </ul>
-            );
-          }
-          break;
-
-        case 'pricing_strategy':
-        case 'growth_ideas':
-          if (Array.isArray(parsedContent)) {
-            return (
-              <ul className="list-group mb-3">
-                {parsedContent.map((item: any, index: number) => (
-                  <li key={index} className="list-group-item border-0 ps-0 py-1 bg-transparent">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            );
-          }
-          break;
-      }
-
-      if (typeof parsedContent === 'string') {
-        return parsedContent.split('\n').map((paragraph: string, i: number) => (
-          <p key={i} className="mb-3">{paragraph}</p>
-        ));
-      }
-
-      return <pre className="mb-3">{JSON.stringify(parsedContent, null, 2)}</pre>;
-    };
 
     return (
       <div className="business-plan-container mt-5">
