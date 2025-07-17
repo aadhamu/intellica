@@ -1,126 +1,109 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
   try {
-    console.log('[START] Incoming request');
-
     // 1. Validate headers
-    const contentType = req.headers.get('content-type');
-    console.log('[DEBUG] content-type:', contentType);
-
+    const contentType = req.headers.get('content-type')
     if (!contentType?.includes('application/json')) {
       return NextResponse.json(
         { error: 'Content-Type must be application/json' },
         { status: 400 }
-      );
+      )
     }
 
-    // 2. Parse JSON body
-    let prompt: string;
+    // 2. Parse and validate body
+    let prompt: string
     try {
-      const body = await req.json();
-      console.log('[DEBUG] Request body:', body);
-      prompt = body.prompt;
-
+      const body = await req.json()
+      prompt = body.prompt
       if (!prompt || typeof prompt !== 'string') {
         return NextResponse.json(
           { error: 'Prompt must be a non-empty string' },
           { status: 400 }
-        );
+        )
       }
     } catch (e) {
-      console.error('[ERROR] Invalid JSON:', e);
       return NextResponse.json(
         { error: 'Invalid JSON body' },
         { status: 400 }
-      );
+      )
     }
 
-    // 3. Call OpenRouter API
-    const openRouterKey = process.env.OPENROUTER_API_KEY;
-    if (!openRouterKey) {
-      console.error('[ERROR] Missing OPENROUTER_API_KEY');
-      return NextResponse.json(
-        { error: 'Missing OpenRouter API Key' },
-        { status: 500 }
-      );
-    }
+    // 3. Call Groq API
+    // const apiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    //   method: 'POST',
+    //   headers: {
+    //     // 'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    //     'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     model: "llama3-70b-8192",
+    //     messages: [{
+    //       role: 'user',
+    //       content: prompt
+    //     }]
+    //   })
+    // })
 
-    const payload = {
-      model: 'deepseek/deepseek-chat-v3-0324:free',
-      messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' }
-    };
+     const apiResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    
+    'Content-Type': 'application/json',
+    'HTTP-Referer': 'http://localhost:3000', // required by OpenRouter
+    'X-Title': 'Intellica'
+  },
+  body: JSON.stringify({
+    model: 'deepseek/deepseek-chat-v3-0324:free', // or any OpenRouter-supported model
+    messages: [
+      { role: 'user', content: prompt }
+    ]
+  })
+})
 
-    console.log('[DEBUG] Sending payload to OpenRouter:', payload);
 
-    const apiResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openRouterKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'http://localhost:3000',
-        'X-Title': 'Business Plan Generator'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    console.log('[DEBUG] OpenRouter response status:', apiResponse.status);
-
-    // 4. Handle errors from OpenRouter
+    // 4. Handle API errors
     if (!apiResponse.ok) {
-      const errorData = await apiResponse.json().catch(() => ({}));
-      console.error('[ERROR] OpenRouter returned error:', errorData);
+      const errorData = await apiResponse.json().catch(() => ({}))
+      console.error('Groq API Error:', errorData)
       return NextResponse.json(
-        { error: errorData?.error?.message || 'Failed to fetch from OpenRouter' },
+        { error: errorData.error?.message || 'API request failed' },
         { status: apiResponse.status }
-      );
+      )
     }
 
-    // 5. Read response JSON
-    const data = await apiResponse.json();
-    console.log('[DEBUG] OpenRouter API response:', data);
+    // 5. Process and validate the response
+    const data = await apiResponse.json()
+    let rawContent = data?.choices?.[0]?.message?.content
+    console.log("AI Raw Response:", rawContent)
 
-    let rawContent = data?.choices?.[0]?.message?.content;
-
-    if (!rawContent) {
-      console.error('[ERROR] No content in AI response');
-      return NextResponse.json(
-        { error: 'AI returned no content' },
-        { status: 500 }
-      );
-    }
-
-    // 6. Try to extract and parse JSON inside markdown code block
     if (typeof rawContent === 'string') {
-      const match = rawContent.match(/```(?:json)?\n([\s\S]*?)\n```/);
-      if (match) {
-        rawContent = match[1];
-      }
-
       try {
-        const parsed = JSON.parse(rawContent);
-        return NextResponse.json(parsed);
-      } catch (err) {
-        console.error('[ERROR] Failed to parse JSON string:', rawContent, err);
+        const codeBlockMatch = rawContent.match(/```(?:json)?\n([\s\S]*?)\n```/)
+        if (codeBlockMatch) {
+          rawContent = codeBlockMatch[1]
+        }
+
+        const parsedContent = JSON.parse(rawContent)
+        return NextResponse.json(parsedContent)
+      } catch (parseError) {
+        console.error('JSON Parse Error:', parseError)
         return NextResponse.json(
-          {
-            error: 'AI returned invalid JSON format',
-            rawResponse: rawContent
-          },
+          { error: 'AI returned invalid JSON format', rawResponse: rawContent },
           { status: 422 }
-        );
+        )
       }
     }
 
-    // 7. Already JSON
-    return NextResponse.json(rawContent);
+    return NextResponse.json(rawContent)
 
   } catch (error) {
-    console.error('[FATAL ERROR] Server crash:', error);
+    console.error('Server Error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
-    );
+    )
   }
 }
