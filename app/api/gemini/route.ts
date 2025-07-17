@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     'X-Title': 'Intellica'
   },
   body: JSON.stringify({
-    model: 'deepseek/deepseek-chat-v3-0324:free', // or any OpenRouter-supported model
+    model: 'deepseek/deepseek-chat-v3-0324', // or any OpenRouter-supported model
     messages: [
       { role: 'user', content: prompt }
     ]
