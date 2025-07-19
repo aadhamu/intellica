@@ -63,7 +63,7 @@ export default function BusinessPlanPage() {
   const generatePrompt = (): string => {
     return `You are SmartStart AI — a world-class virtual business consultant trained in global markets, startup strategy, and localized economic trends.
 
-Based on the user's business type, location, and funding, generate a complete professional business plan in **STRICT JSON format** with this exact structure:
+Based on the user's business type, location, and funding, generate a complete professional business plan in  with this exact structure:
 
 {
   "title": "Business name and type",
@@ -414,196 +414,183 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
     setResponse(null);
   };
 
-  const renderResponse = () => {
-    if (typeof response === 'string') {
-      return (
-        <div className="alert alert-danger p-3 rounded">
-          <p className="mb-0">{response}</p>
-        </div>
-      );
-    }
-    
-    if (!response) {
-      return (
-        <div className="alert alert-info p-3 rounded">
-          <p className="mb-0">No business plan generated yet.</p>
-        </div>
-      );
-    }
+  const renderContent = (content: any, key: string) => {
+  // If content is null or undefined, return empty
+  if (content == null) return null;
 
-    const parseIfJson = (content: any) => {
-      if (typeof content === 'string') {
-        try {
-          return JSON.parse(content);
-        } catch {
-          return content;
-        }
-      }
-      return content;
-    };
+  // Handle string content
+  if (typeof content === 'string') {
+    // Split by double newlines first (for paragraphs)
+    const paragraphs = content.split('\n\n');
+    return paragraphs.map((paragraph, i) => (
+      <p key={i} className="mb-3">
+        {paragraph.split('\n').map((line, j) => (
+          <span key={j}>
+            {line}
+            <br />
+          </span>
+        ))}
+      </p>
+    ));
+  }
 
-    const renderContent = (content: any, key: string) => {
-      const parsedContent = parseIfJson(content);
-      
-      switch(key) {
-        case 'things_needed_to_start':
-        case 'setup_checklist':
-          if (Array.isArray(parsedContent)) {
-            return (
-              <ol className="list-group list-group-numbered mb-3">
-                {parsedContent.map((item: any, index: number) => (
-                  <li key={index} className="list-group-item border-0 ps-0 py-1 bg-transparent">
-                    {typeof item === 'object' ? JSON.stringify(item) : item}
-                  </li>
-                ))}
-              </ol>
-            );
-          } else if (typeof parsedContent === 'object') {
-            return Object.entries(parsedContent).map(([category, items]) => (
-              <div key={category} className="mb-3">
-                <h6 className="text-muted">{category}</h6>
-                <ul className="list-group">
-                  {Array.isArray(items) ? items.map((item: any, i: number) => (
-                    <li key={i} className="list-group-item border-0 ps-0 py-1 bg-transparent">
-                      {typeof item === 'object' ? `${item.name}: ${item.cost_estimate}` : item}
-                    </li>
-                  )) : (
-                    <li className="list-group-item border-0 ps-0 py-1 bg-transparent">
-                      {JSON.stringify(items)}
-                    </li>
-                  )}
-                </ul>
-              </div>
-            ));
-          }
-          break;
-
-        case 'market_analysis':
-        case 'marketing_strategy':
-        case 'financial_plan':
-        case 'operations_plan':
-          if (typeof parsedContent === 'object') {
-            return (
-              <ul className="list-group mb-3">
-                {Object.entries(parsedContent).map(([subKey, value]) => (
-                  <li key={subKey} className="list-group-item border-0 ps-0 py-1 bg-transparent">
-                    <strong>{subKey.replace(/_/g, ' ')}:</strong> {value === undefined ? '' : (typeof value === 'object' ? JSON.stringify(value) : String(value))}
-                  </li>
-                ))}
-              </ul>
-            );
-          }
-          break;
-
-        case 'pricing_strategy':
-        case 'growth_ideas':
-          if (Array.isArray(parsedContent)) {
-            return (
-              <ul className="list-group mb-3">
-                {parsedContent.map((item: any, index: number) => (
-                  <li key={index} className="list-group-item border-0 ps-0 py-1 bg-transparent">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            );
-          }
-          break;
-      }
-
-      if (typeof parsedContent === 'string') {
-        return parsedContent.split('\n').map((paragraph: string, i: number) => (
-          <p key={i} className="mb-3">{paragraph}</p>
-        ));
-      }
-
-      return <pre className="mb-3">{JSON.stringify(parsedContent, null, 2)}</pre>;
-    };
-
+  // Handle array content
+  if (Array.isArray(content)) {
     return (
-      <div className="business-plan-container mt-5">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h3 className="text-primary mb-0 fw-bold">
-            {response.title || 'Business Plan'}
-          </h3>
-          <button 
-            onClick={downloadAsWord}
-            className="btn btn-success btn-sm"
-            disabled={saving}
-          >
-            {saving ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-                Saving...
-              </>
-            ) : (
-              <>
-                <i className="bi bi-file-earmark-word me-2"></i>
-                Download DOCX
-              </>
-            )}
-          </button>
-        </div>
+      <ul className="list-group mb-3">
+        {content.map((item, index) => (
+          <li key={index} className="list-group-item border-0 ps-0 py-1 bg-transparent">
+            {typeof item === 'object' ? renderObjectContent(item) : item}
+          </li>
+        ))}
+      </ul>
+    );
+  }
 
-        {response.executive_summary && (
-          <div className="plan-section mb-4 p-3 border rounded">
-            <h5 className="section-title text-success mb-3 fw-bold">Executive Summary</h5>
-            <div className="section-content">
-              {renderContent(response.executive_summary, 'executive_summary')}
-            </div>
-          </div>
-        )}
+  // Handle object content
+  if (typeof content === 'object') {
+    return renderObjectContent(content);
+  }
 
-        {Object.entries(response)
-          .filter(([key]) => !['title', 'executive_summary', 'id', 'created_at'].includes(key))
-          .map(([key, value]) => (
-            <div key={key} className="plan-section mb-4 p-3 border rounded">
-              <h5 className="section-title text-success mb-3 fw-bold">
-                {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-              </h5>
-              <div className="section-content">
-                {renderContent(value, key)}
-              </div>
-            </div>
-          ))}
+  // Fallback for other types
+  return <p className="mb-3">{String(content)}</p>;
+};
 
-        <style jsx>{`
-          .business-plan-container {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-          }
-          
-          .plan-section {
-            background-color: #fff;
-            transition: all 0.3s ease;
-          }
-          
-          .plan-section:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-          }
-          
-          .section-title {
-            border-bottom: 2px solid #dee2e6;
-            padding-bottom: 8px;
-          }
-          
-          .section-content {
-            line-height: 1.8;
-          }
-          
-          .section-content p {
-            text-align: justify;
-          }
-          
-          @media (max-width: 768px) {
-            .business-plan-container {
-              padding: 0 10px;
-            }
-          }
-        `}</style>
+const renderObjectContent = (obj: Record<string, any>) => {
+  return (
+    <ul className="list-group mb-3">
+      {Object.entries(obj).map(([key, value]) => (
+        <li key={key} className="list-group-item border-0 ps-0 py-1 bg-transparent">
+          <strong>{formatKey(key)}:</strong> {renderValue(value)}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+const formatKey = (key: string) => {
+  return key
+    .replace(/_/g, ' ')
+    .replace(/(?:^|\s)\S/g, match => match.toUpperCase());
+};
+
+const renderValue = (value: any) => {
+  if (value == null) return '';
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value)) {
+    return (
+      <ul className="mt-2 mb-0 ps-3">
+        {value.map((item, i) => (
+          <li key={i}>{renderValue(item)}</li>
+        ))}
+      </ul>
+    );
+  }
+  if (typeof value === 'object') return renderObjectContent(value);
+  return String(value);
+};
+
+const renderResponse = () => {
+  if (typeof response === 'string') {
+    return (
+      <div className="alert alert-danger p-3 rounded">
+        <p className="mb-0">{response}</p>
       </div>
     );
-  };
+  }
+  
+  if (!response) {
+    return (
+      <div className="alert alert-info p-3 rounded">
+        <p className="mb-0">No business plan generated yet.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="business-plan-container mt-5">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3 className="text-primary mb-0 fw-bold">
+          {response.title || 'Business Plan'}
+        </h3>
+        <button 
+          onClick={downloadAsWord}
+          className="btn btn-success btn-sm"
+          disabled={saving}
+        >
+          {saving ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+              Saving...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-file-earmark-word me-2"></i>
+              Download DOCX
+            </>
+          )}
+        </button>
+      </div>
+
+      {response.executive_summary && (
+        <div className="plan-section mb-4 p-3 border rounded">
+          <h5 className="section-title text-success mb-3 fw-bold">Executive Summary</h5>
+          <div className="section-content">
+            {renderContent(response.executive_summary, 'executive_summary')}
+          </div>
+        </div>
+      )}
+
+      {Object.entries(response)
+        .filter(([key]) => !['title', 'executive_summary', 'id', 'created_at'].includes(key))
+        .map(([key, value]) => (
+          <div key={key} className="plan-section mb-4 p-3 border rounded">
+            <h5 className="section-title text-success mb-3 fw-bold">
+              {formatKey(key)}
+            </h5>
+            <div className="section-content">
+              {renderContent(value, key)}
+            </div>
+          </div>
+        ))}
+
+      <style jsx>{`
+        .business-plan-container {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          color: #333;
+        }
+        
+        .plan-section {
+          background-color: #fff;
+          transition: all 0.3s ease;
+        }
+        
+        .plan-section:hover {
+          box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+          border-bottom: 2px solid #dee2e6;
+          padding-bottom: 8px;
+        }
+        
+        .section-content {
+          line-height: 1.8;
+        }
+        
+        .section-content p {
+          text-align: justify;
+        }
+        
+        @media (max-width: 768px) {
+          .business-plan-container {
+            padding: 0 10px;
+          }
+        }
+      `}</style>
+    </div>
+  );
+};
 
   return (
     <div className="container py-5 mt-5">
