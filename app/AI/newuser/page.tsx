@@ -149,7 +149,7 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
     }
   };
 
-  const downloadAsWord = async () => {
+ const downloadAsWord = async () => {
     if (!response || typeof response === 'string') return;
 
     setSaving(true);
@@ -160,12 +160,12 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
 
         let itemArray: string[] = [];
         if (typeof items === 'string') {
-          itemArray = items.split('\n').filter(item => item.trim() !== '');
+          itemArray = items.split('\n').filter(item => item && typeof item === 'string' && item.trim() !== '');
         } else if (Array.isArray(items)) {
-          itemArray = items;
+          itemArray = items.map(item => String(item));
         } else if (typeof items === 'object') {
           itemArray = Object.entries(items).map(([key, value]) => 
-            `${key}: ${typeof value === 'object' ? JSON.stringify(value) : value}`
+            `${key}: ${typeof value === 'object' ? JSON.stringify(value) : String(value)}`
           );
         }
 
@@ -173,7 +173,7 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
           new Paragraph({
             children: [
               new TextRun({ text: `${index + 1}. `, bold: true }),
-              new TextRun(item.trim())
+              new TextRun(typeof item === 'string' ? item.trim() : String(item))
             ],
             spacing: { after: 100 }
           })
@@ -185,12 +185,12 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
 
         let itemArray: string[] = [];
         if (typeof items === 'string') {
-          itemArray = items.split('\n').filter(item => item.trim() !== '');
+          itemArray = items.split('\n').filter(item => item && typeof item === 'string' && item.trim() !== '');
         } else if (Array.isArray(items)) {
-          itemArray = items;
+          itemArray = items.map(item => String(item));
         } else if (typeof items === 'object') {
           itemArray = Object.entries(items).map(([key, value]) => 
-            `${key}: ${typeof value === 'object' ? JSON.stringify(value) : value}`
+            `${key}: ${typeof value === 'object' ? JSON.stringify(value) : String(value)}`
           );
         }
 
@@ -198,7 +198,7 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
           new Paragraph({
             children: [
               new TextRun({ text: '• ', bold: true }),
-              new TextRun(item.trim())
+              new TextRun(typeof item === 'string' ? item.trim() : String(item))
             ],
             spacing: { after: 100 }
           })
@@ -220,18 +220,18 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
 
           tables.push(
             new Paragraph({
-              text: sectionName.replace(/_/g, ' ').toUpperCase(),
+              text: String(sectionName).replace(/_/g, ' ').toUpperCase(),
               heading: HeadingLevel.HEADING_3,
               spacing: { after: 100 }
             })
           );
 
-          if (typeof sectionData === 'object') {
+          if (typeof sectionData === 'object' && sectionData !== null) {
             const rows = Object.entries(sectionData).map(([key, value]) => (
               new TableRow({
                 children: [
                   new TableCell({
-                    children: [new Paragraph(key)],
+                    children: [new Paragraph(String(key))],
                     width: { size: 50, type: WidthType.PERCENTAGE }
                   }),
                   new TableCell({
@@ -272,6 +272,7 @@ Respond ONLY with a clean, valid JSON object matching the structure above. Do no
         return tables;
       };
 
+      
       const sections = Object.entries(response)
         .filter(([key]) => !['title', 'id', 'created_at'].includes(key))
         .flatMap(([key, value]) => {
